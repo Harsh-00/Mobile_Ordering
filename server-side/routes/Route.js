@@ -7,7 +7,6 @@ router.get("/all", async (req, res) => {
 	{
 		try {
 			const allMob = await Mobile.find({});
-			console.log(req);
 			res.status(200).json({
 				success: true,
 				info: allMob,
@@ -39,27 +38,70 @@ router.post("/add", async (req, res) => {
 		});
 	}
 });
+//get filtered mobile
+router.get("/filter", async (req, res) => {
+	try {
+		const brandArray = JSON.parse(req.query.filter);
+		const ramArray = JSON.parse(req.query.ramFilter);
+
+		console.log(brandArray);
+		console.log(ramArray);
+
+		// for (let i = 0; i < filterArray.length; i++) {
+		// 	brandArray?.push(filterArray[i]?.brand);
+		// 	ramArray?.push(filterArray[i]?.ram);
+		// }
+
+		if (brandArray.length !== 0 && ramArray.length !== 0) {
+			var filterMob = await Mobile.find({
+				$and: [
+					{ brand: { $in: brandArray } },
+					{ ram: { $in: ramArray } },
+				],
+			});
+		} else if (brandArray.length !== 0) {
+			var filterMob = await Mobile.find({ brand: { $in: brandArray } });
+		} else if (ramArray.length !== 0) {
+			var filterMob = await Mobile.find({ ram: { $in: ramArray } });
+		}
+
+		console.log(filterMob);
+
+		if (!filterMob) {
+			res.status(404).json({
+				success: false,
+				message: "No Mobile Foundvgd",
+			});
+		} else
+			res.status(200).json({
+				success: true,
+				message: filterMob,
+			});
+	} catch (e) {
+		res.status(500).json({
+			success: false,
+			message: e.message,
+		});
+	}
+});
 
 //get a mobile entry
 router.get("/:key", async (req, res) => {
 	try {
 		const key = req.params.key;
 		console.log(key);
-
 		const mobFind = await Mobile.findOne({ key });
-		console.log(mobFind);
 
 		if (!mobFind) {
 			res.status(404).json({
 				success: false,
 				message: "Mobile Not Found",
 			});
-		}
-
-		res.status(200).json({
-			success: true,
-			message: mobFind,
-		});
+		} else
+			res.status(200).json({
+				success: true,
+				message: mobFind,
+			});
 	} catch (e) {
 		res.status(500).json({
 			success: false,
@@ -113,12 +155,11 @@ router.delete("/delete/:key", async (req, res) => {
 				success: false,
 				message: "Mobile Not Found",
 			});
-		}
-
-		res.status(200).json({
-			success: true,
-			message: "Mobile Deleted Successfully",
-		});
+		} else
+			res.status(200).json({
+				success: true,
+				message: "Mobile Deleted Successfully",
+			});
 	} catch (e) {}
 });
 

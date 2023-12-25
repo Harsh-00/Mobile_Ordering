@@ -5,7 +5,7 @@ import { MobileContext } from "../context/MobileContext";
 import Card from "../comp/Card";
 
 const Mobile = () => {
-	const { allMob, setAllMob, fetchAllMobiles } = useContext(MobileContext);
+	const { allMob, fetchAllMobiles } = useContext(MobileContext);
 	console.log(allMob);
 
 	useEffect(() => {

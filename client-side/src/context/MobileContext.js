@@ -5,10 +5,14 @@ export const MobileContext = React.createContext();
 
 export function MobileProvider({ children }) {
 	const [allMob, setAllMob] = useState([]);
-	const [filter, setFilter] = useState([]);
-	const [filterMob, setFilterMob] = useState([]);
+
 	const [brand, setBrand] = useState([]);
-	console.log(brand);
+	const [filter, setFilter] = useState([]);
+
+	const [ram, setRam] = useState([]);
+	const [ramFilter, setRamFilter] = useState([]);
+	console.log(filter);
+	console.log("RAm", ramFilter);
 
 	async function fetchAllMobiles() {
 		try {
@@ -31,13 +35,38 @@ export function MobileProvider({ children }) {
 		setBrand([...new Set(brand)]);
 	}
 
-	async function storeFiltered() {
-		allMob.map((item) => {
-			if (filter.includes(item.brand)) {
-				filterMob.push(item);
-			}
-		});
+	if (allMob.length > 0 && ram.length === 0) {
+		storeRam();
 	}
+	async function storeRam() {
+		allMob.map((items) => {
+			ram.push(items.ram);
+		});
+		setRam([...new Set(ram)]);
+	}
+
+	async function fetchFiltered() {
+		if (filter.length === 0 && ramFilter.length === 0) {
+			return fetchAllMobiles();
+		}
+		const res = await axios.get("http://localhost:3001/mobiles/filter", {
+			params: {
+				filter: JSON.stringify(filter),
+				ramFilter: JSON.stringify(ramFilter),
+			},
+		});
+
+		console.log(res.data.message);
+		setAllMob(res.data.message);
+	}
+
+	// async function storeFiltered() {
+	// 	allMob.map((item) => {
+	// 		if (filter.includes(item.brand)) {
+	// 			filterMob.push(item);
+	// 		}
+	// 	});
+	// }
 	const val = {
 		allMob,
 		setAllMob,
@@ -46,8 +75,11 @@ export function MobileProvider({ children }) {
 		brand,
 		filter,
 		setFilter,
-		storeFiltered,
-		filterMob,
+		fetchFiltered,
+		ram,
+		setRam,
+		ramFilter,
+		setRamFilter,
 	};
 	return (
 		<MobileContext.Provider value={val}>{children}</MobileContext.Provider>
