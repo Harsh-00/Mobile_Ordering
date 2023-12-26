@@ -3,13 +3,7 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 
-app.use(
-	cors({
-		origin: ["https://mobile-ordering-client.vercel.app"],
-		methods: ["GET", "POST", "PUT", "DELETE"],
-		credentials: true,
-	})
-);
+app.use(cors());
 
 app.use(express.json());
 
