@@ -16,7 +16,9 @@ export function MobileProvider({ children }) {
 
 	async function fetchAllMobiles() {
 		try {
-			const res = await axios.get("http://localhost:3001/mobiles/all");
+			const res = await axios.get(
+				"https://mobile-ordering-server.vercel.app/mobiles/all"
+			);
 			console.log(res);
 
 			setAllMob(res.data.info);
@@ -49,12 +51,15 @@ export function MobileProvider({ children }) {
 		if (filter?.length === 0 && ramFilter?.length === 0) {
 			return fetchAllMobiles();
 		}
-		const res = await axios.get("http://localhost:3001/mobiles/filter", {
-			params: {
-				filter: JSON.stringify(filter),
-				ramFilter: JSON.stringify(ramFilter),
-			},
-		});
+		const res = await axios.get(
+			"https://mobile-ordering-server.vercel.app/mobiles/filter",
+			{
+				params: {
+					filter: JSON.stringify(filter),
+					ramFilter: JSON.stringify(ramFilter),
+				},
+			}
+		);
 
 		console.log(res.data.message);
 		setAllMob(res.data.message);
