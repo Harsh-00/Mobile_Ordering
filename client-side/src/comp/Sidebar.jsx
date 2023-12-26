@@ -36,7 +36,7 @@ const Sidebar = () => {
 			<h1>Filter</h1>
 			<div>Brand</div>
 			<div>
-				{brand.map((item, idx) => {
+				{brand?.map((item, idx) => {
 					return (
 						<div key={idx}>
 							<label>
@@ -54,7 +54,7 @@ const Sidebar = () => {
 			</div>
 			<div>RAM</div>
 			<div>
-				{ram.map((item, idx) => {
+				{ram?.map((item, idx) => {
 					return (
 						<div key={idx}>
 							<label>

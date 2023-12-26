@@ -14,12 +14,9 @@ export function MobileProvider({ children }) {
 	console.log(filter);
 	console.log("RAm", ramFilter);
 
-	axios.defaults.withCredentials = true;
 	async function fetchAllMobiles() {
 		try {
-			const res = await axios.get(
-				"https://mobile-ordering-server.vercel.app/mobiles/all"
-			);
+			const res = await axios.get("http://localhost:3001/mobiles/all");
 			console.log(res);
 
 			setAllMob(res.data.info);
@@ -28,51 +25,41 @@ export function MobileProvider({ children }) {
 		}
 	}
 
-	if (allMob.length > 0 && brand.length === 0) {
+	if (allMob?.length > 0 && brand?.length === 0) {
 		storeBrands();
 	}
 	async function storeBrands() {
-		allMob.map((items) => {
+		allMob?.map((items) => {
 			brand.push(items.brand);
 		});
 		setBrand([...new Set(brand)]);
 	}
 
-	if (allMob.length > 0 && ram.length === 0) {
+	if (allMob?.length > 0 && ram?.length === 0) {
 		storeRam();
 	}
 	async function storeRam() {
-		allMob.map((items) => {
+		allMob?.map((items) => {
 			ram.push(items.ram);
 		});
 		setRam([...new Set(ram)]);
 	}
 
 	async function fetchFiltered() {
-		if (filter.length === 0 && ramFilter.length === 0) {
+		if (filter?.length === 0 && ramFilter?.length === 0) {
 			return fetchAllMobiles();
 		}
-		const res = await axios.get(
-			"https://mobile-ordering-server.vercel.app/mobiles/filter",
-			{
-				params: {
-					filter: JSON.stringify(filter),
-					ramFilter: JSON.stringify(ramFilter),
-				},
-			}
-		);
+		const res = await axios.get("http://localhost:3001/mobiles/filter", {
+			params: {
+				filter: JSON.stringify(filter),
+				ramFilter: JSON.stringify(ramFilter),
+			},
+		});
 
 		console.log(res.data.message);
 		setAllMob(res.data.message);
 	}
 
-	// async function storeFiltered() {
-	// 	allMob.map((item) => {
-	// 		if (filter.includes(item.brand)) {
-	// 			filterMob.push(item);
-	// 		}
-	// 	});
-	// }
 	const val = {
 		allMob,
 		setAllMob,
