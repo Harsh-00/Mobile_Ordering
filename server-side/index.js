@@ -3,15 +3,22 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 
-app.use(function (request, response, next) {
-	response.header("Access-Control-Allow-Origin", "*");
-	response.header(
-		"Access-Control-Allow-Headers",
-		"Origin, X-Requested-With, Content-Type, Accept"
-	);
-	next();
-});
-app.use(cors());
+// app.use(function (request, response, next) {
+// 	response.header("Access-Control-Allow-Origin", "*");
+// 	response.header(
+// 		"Access-Control-Allow-Headers",
+// 		"Origin, X-Requested-With, Content-Type, Accept"
+// 	);
+// 	next();
+// });
+app.use(
+	cors({
+		origin: ["https://mobile-ordering-client.vercel.app"],
+		methods: ["GET", "POST", "PUT", "DELETE"],
+		Headers: "Origin, X-Requested-With, Content-Type,Authorization, Accept",
+		credentials: true,
+	})
+);
 
 app.use(express.json());
 app.use("/", (req, res) => {
